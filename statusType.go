@@ -1,0 +1,18 @@
+package main
+
+type LiftStatus struct {
+	Lift      []Lift `json:"lift"`
+	UpdatedAt string `json:"updated_at"`
+}
+
+type Lift struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Hours    string `json:"hours"`
+	Season   string `json:"season"`
+	Status   string `json:"status"`
+	Capacity string `json:"capacity"`
+	Created  int    `json:"created"`
+	Updated  int    `json:"updated"`
+	Weight   int    `json:"weight"`
+}

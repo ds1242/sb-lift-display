@@ -1,24 +1,28 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 )
 
-func queryStatus() {
+func queryLiftStatus() (*LiftStatus, error) {
 	response, err := http.Get("https://api.snowbird.com/api/v1/dor/lift-trail-report?alphabetical=true")
 	if err != nil {
-		fmt.Printf(err.Error())
-		return
+		return nil, err
 	}
 
-	responseData, err := io.ReadAll(resoonse.Body)
+	responseData, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.Printf("error parsing response body\n")
-		return
+		return nil, err
 	}
 
-	fmt.Println(responseData)
+	var status LiftStatus
+
+	err = json.Unmarshal(responseData, &status)
+	if err != nil {
+		return nil, err
+	}
+
+	return &status, nil
 }
