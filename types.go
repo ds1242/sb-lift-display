@@ -1,8 +1,7 @@
 package main
 
 type LiftStatus struct {
-	Lift      []Lift `json:"lift"`
-	UpdatedAt string `json:"updated_at"`
+	Lift []Lift `json:"lift"`
 }
 
 type Lift struct {
