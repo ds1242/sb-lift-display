@@ -19,9 +19,7 @@ func main() {
 	cache := &Cache{}
 	cache.GetLifts()
 	
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("GET /api/lifts", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("GET /api/lifts", func(w http.ResponseWriter, r *http.Request) {
 		lifts, err := cache.GetLifts()
 		if err != nil {
 			RespondWithError(w, http.StatusInternalServerError, "failed to fetch lift status")
@@ -32,5 +30,4 @@ func main() {
 
 	log.Printf("Serving on PORT : %s\n", port)
 	log.Fatal(http.ListenAndServe(":" + port, nil))
-	// mux.HandleFunc("GET /api/v1/status", cfg.handlerGetStatus)
 }

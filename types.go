@@ -22,7 +22,6 @@ type Lift struct {
 	Hours    string `json:"hours"`
 	Season   string `json:"season"`
 	Status   string `json:"status"`
-	Capacity string `json:"capacity"`
 	Created  int    `json:"created"`
 	Updated  int    `json:"updated"`
 	Weight   int    `json:"weight"`
