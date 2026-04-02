@@ -1,0 +1,7 @@
+services:
+  snowbird:
+    build: .
+    ports:
+      - "${PORT}:${PORT}"
+    env_file:
+      - .env
