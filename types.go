@@ -1,5 +1,17 @@
 package main
 
+import (
+	"sync"
+	"time"
+)
+
+
+type Cache struct {
+	mu sync.Mutex
+	liftStatus *LiftStatus
+	fetchedAt time.Time
+}
+
 type LiftStatus struct {
 	Lift []Lift `json:"lift"`
 }

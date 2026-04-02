@@ -1,37 +1,36 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
+	"net/http"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	/* port := os.Getenv("PORT")
+	godotenv.Load()
+	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("PORT environment variable is not set")
 		return
 	}
+	
+	cache := &Cache{}
+	cache.GetLifts()
+	
+	mux := http.NewServeMux()
 
-	mux := http.NewServeMux() */
+	mux.HandleFunc("GET /api/lifts", func(w http.ResponseWriter, r *http.Request) {
+		lifts, err := cache.GetLifts()
+		if err != nil {
+			RespondWithError(w, http.StatusInternalServerError, "failed to fetch lift status")
+			return
+		}
+		RespondWithJSON(w, http.StatusOK, lifts)
+	})
 
-	liftStatus, err := queryLiftStatus()
-	if err != nil {
-		log.Printf(err.Error())
-	}
-
-	fmt.Println(liftStatus)
-
-	fileBytes, err := json.MarshalIndent(liftStatus, "", " ")
-	if err != nil {
-		log.Printf("unable to marshal data to json file\n")
-	}
-
-	err = os.WriteFile("liftStatus.json", fileBytes, 0644)
-	if err != nil {
-		log.Printf("unable to write to json file\n")
-	}
-
+	log.Printf("Serving on PORT : %s\n", port)
+	log.Fatal(http.ListenAndServe(":" + port, nil))
 	// mux.HandleFunc("GET /api/v1/status", cfg.handlerGetStatus)
 }
