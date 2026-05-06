@@ -20,7 +20,7 @@ func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func RespondWithError(w http.ResponseWriter, code int, msg string) {
-	if code > 499 {
+	if code > 399 {
 		log.Printf("Responding with error code %d: %s", code, msg)
 	}
 
