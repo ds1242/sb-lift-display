@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -36,6 +39,36 @@ func main() {
 			return
 		}
 		RespondWithJSON(w, http.StatusOK, lifts)
+	})
+
+	http.HandleFunc("GET /api/test-all-open", func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("X-API-Key") != apiKey {
+			RespondWithError(w, http.StatusUnauthorized, "unauthorized")
+			return
+		}
+
+		file, err := os.Open("liftStatus.json")
+		if err != nil {
+			RespondWithError(w, http.StatusInternalServerError, "unable to open lift file")
+			return
+		}
+
+		fileData, err := io.ReadAll(file)
+		if err != nil {
+			fmt.Printf("Error reading file body: %s\n", err)
+			return
+		}
+
+		var practiceStatus LiftStatus
+		err = json.Unmarshal(fileData, &practiceStatus)
+		if err != nil {
+			RespondWithError(w, http.StatusInternalServerError, "unable to unmarshall test file")
+			return
+		}
+
+		defer file.Close()
+
+		RespondWithJSON(w, http.StatusOK, practiceStatus)
 	})
 
 	log.Printf("Serving on PORT : %s\n", port)
