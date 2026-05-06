@@ -28,7 +28,16 @@ func main() {
 	cache := &Cache{}
 	cache.GetLifts()
 
-	http.HandleFunc("GET /api/lifts", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("GET /api/lifts", handleGetLifts(cache, apiKey))
+
+	http.HandleFunc("GET /api/test-all-open", handleTestAllOpen(cache, apiKey))
+
+	log.Printf("Serving on PORT : %s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
+}
+
+func handleGetLifts(cache *Cache, apiKey string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("X-API-Key") != apiKey {
 			RespondWithError(w, http.StatusUnauthorized, "unauthorized")
 			return
@@ -39,9 +48,11 @@ func main() {
 			return
 		}
 		RespondWithJSON(w, http.StatusOK, lifts)
-	})
+	}
+}
 
-	http.HandleFunc("GET /api/test-all-open", func(w http.ResponseWriter, r *http.Request) {
+func handleTestAllOpen(cache *Cache, apiKey string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("X-API-Key") != apiKey {
 			RespondWithError(w, http.StatusUnauthorized, "unauthorized")
 			return
@@ -69,8 +80,5 @@ func main() {
 		defer file.Close()
 
 		RespondWithJSON(w, http.StatusOK, practiceStatus)
-	})
-
-	log.Printf("Serving on PORT : %s\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	}
 }
