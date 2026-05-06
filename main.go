@@ -30,7 +30,7 @@ func main() {
 
 	http.HandleFunc("GET /api/lifts", handleGetLifts(cache, apiKey))
 
-	http.HandleFunc("GET /api/test-all-open", handleTestAllOpen(cache, apiKey))
+	http.HandleFunc("GET /api/test-all-open", handleTestAllOpen(apiKey))
 
 	log.Printf("Serving on PORT : %s\n", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
@@ -51,7 +51,7 @@ func handleGetLifts(cache *Cache, apiKey string) http.HandlerFunc {
 	}
 }
 
-func handleTestAllOpen(cache *Cache, apiKey string) http.HandlerFunc {
+func handleTestAllOpen(apiKey string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("X-API-Key") != apiKey {
 			RespondWithError(w, http.StatusUnauthorized, "unauthorized")
