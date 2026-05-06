@@ -9,15 +9,51 @@ in the API.  This is then hosted with an endpoint that my ESP32 can query
 and display the current lift status.
 
 ## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Tests](#tests)
+- [Future Enhancements](#future-enhancements)
 
 ## Installation
+```bash
+go mod download
+```
 
 ## Usage
+Set up environment variables:
+```bash
+PORT=8080
+API_KEY=your-secret-key
+```
 
-## Languages
+Run the server:
+```bash
+go run .
+```
 
-## Contributing
+### Endpoints
+- `GET /api/lifts` - Fetch cached lift status (requires `X-API-Key` header)
+- `GET /api/test-all-open` - Fetch lift status from test file (requires `X-API-Key` header)
 
 ## Tests
+Run all tests:
+```bash
+go test -v
+```
+
+Current test coverage:
+- **json_test.go**: HTTP response helpers (`RespondWithJSON`, `RespondWithError`)
+  - Verifies correct status codes, Content-Type headers, and JSON response bodies
+  - Table-driven tests for multiple error code scenarios
+
+- **cache_test.go**: Cache logic (`GetLifts()`)
+  - Cache hit scenario with fresh data
+
+- **main_test.go**: Handler functions for `/api/lifts`
+  - Authorization checks (valid and invalid API keys)
+  - Response formatting and error handling
 
 ## Future Enhancements
+- Cache miss handling with mocked API calls
+- Integration tests with real API responses
+- `/api/test-all-open` endpoint tests
