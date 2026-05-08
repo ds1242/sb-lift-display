@@ -9,6 +9,7 @@ RUN go build -o snowbird .
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/snowbird .
+COPY liftStatus.json .
 EXPOSE 8080
 CMD ["./snowbird"]
 
